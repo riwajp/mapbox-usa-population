@@ -1,0 +1,202 @@
+[
+    {
+      "State": "California",
+      "literacyRate": "0.7690"
+    },
+    {
+      "State": "New York",
+      "literacyRate": "0.7790"
+    },
+    {
+      "State": "Florida",
+      "literacyRate": "0.8030"
+    },
+    {
+      "State": "Texas",
+      "literacyRate": "0.8100"
+    },
+    {
+      "State": "New Jersey",
+      "literacyRate": "0.8310"
+    },
+    {
+      "State": "Georgia",
+      "literacyRate": "0.8330"
+    },
+    {
+      "State": "New Mexico",
+      "literacyRate": "0.8350"
+    },
+    {
+      "State": "Nevada",
+      "literacyRate": "0.8390"
+    },
+    {
+      "State": "Louisiana",
+      "literacyRate": "0.8400"
+    },
+    {
+      "State": "Mississippi",
+      "literacyRate": "0.8400"
+    },
+    {
+      "State": "Hawaii",
+      "literacyRate": "0.8410"
+    },
+    {
+      "State": "Alabama",
+      "literacyRate": "0.8520"
+    },
+    {
+      "State": "South Carolina",
+      "literacyRate": "0.8530"
+    },
+    {
+      "State": "Arkansas",
+      "literacyRate": "0.8630"
+    },
+    {
+      "State": "North Carolina",
+      "literacyRate": "0.8640"
+    },
+    {
+      "State": "West Virginia",
+      "literacyRate": "0.8660"
+    },
+    {
+      "State": "Tennessee",
+      "literacyRate": "0.8680"
+    },
+    {
+      "State": "Arizona",
+      "literacyRate": "0.8690"
+    },
+    {
+      "State": "Illinois",
+      "literacyRate": "0.8710"
+    },
+    {
+      "State": "Pennsylvania",
+      "literacyRate": "0.8740"
+    },
+    {
+      "State": "Oklahoma",
+      "literacyRate": "0.8770"
+    },
+    {
+      "State": "Kentucky",
+      "literacyRate": "0.8780"
+    },
+    {
+      "State": "Virginia",
+      "literacyRate": "0.8800"
+    },
+    {
+      "State": "Maryland",
+      "literacyRate": "0.8880"
+    },
+    {
+      "State": "Delaware",
+      "literacyRate": "0.8930"
+    },
+    {
+      "State": "Idaho",
+      "literacyRate": "0.8950"
+    },
+    {
+      "State": "Oregon",
+      "literacyRate": "0.8980"
+    },
+    {
+      "State": "Colorado",
+      "literacyRate": "0.9010"
+    },
+    {
+      "State": "Massachusetts",
+      "literacyRate": "0.9010"
+    },
+    {
+      "State": "Washington",
+      "literacyRate": "0.9020"
+    },
+    {
+      "State": "Utah",
+      "literacyRate": "0.9060"
+    },
+    {
+      "State": "Alaska",
+      "literacyRate": "0.9080"
+    },
+    {
+      "State": "Ohio",
+      "literacyRate": "0.9090"
+    },
+    {
+      "State": "Wyoming",
+      "literacyRate": "0.9110"
+    },
+    {
+      "State": "Montana",
+      "literacyRate": "0.9120"
+    },
+    {
+      "State": "Connecticut",
+      "literacyRate": "0.9140"
+    },
+    {
+      "State": "Rhode Island",
+      "literacyRate": "0.9150"
+    },
+    {
+      "State": "Michigan",
+      "literacyRate": "0.9170"
+    },
+    {
+      "State": "Indiana",
+      "literacyRate": "0.9200"
+    },
+    {
+      "State": "Kansas",
+      "literacyRate": "0.9220"
+    },
+    {
+      "State": "Iowa",
+      "literacyRate": "0.9250"
+    },
+    {
+      "State": "Missouri",
+      "literacyRate": "0.9250"
+    },
+    {
+      "State": "Maine",
+      "literacyRate": "0.9260"
+    },
+    {
+      "State": "Nebraska",
+      "literacyRate": "0.9270"
+    },
+    {
+      "State": "Wisconsin",
+      "literacyRate": "0.9270"
+    },
+    {
+      "State": "South Dakota",
+      "literacyRate": "0.9300"
+    },
+    {
+      "State": "Vermont",
+      "literacyRate": "0.9340"
+    },
+    {
+      "State": "North Dakota",
+      "literacyRate": "0.9370"
+    },
+    {
+      "State": "Minnesota",
+      "literacyRate": "0.9400"
+    },
+    {
+      "State": "New Hampshire",
+      "literacyRate": "0.9420"
+    }
+  ]

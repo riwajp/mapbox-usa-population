@@ -1,6 +1,28 @@
 
 
 .map-container{
-  height:400px;
+  height:550px;
   width:100%;
+}
+
+.legend{
+  position:absolute;
+  top:25px;
+  left:20px;
+  z-index:3;
+  background-color: white;
+  width:fit-content;
+  padding:5px;
+  
+}
+
+
+.legend__color{
+  width:10px;
+  height:10px;
+  border:0 solid;
+  border-radius:100%;
+  display:inline-block;
+  margin-left:2px;
+  margin-right:2px;
 }

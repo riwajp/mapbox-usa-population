@@ -2,9 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 
 import mapboxgl from "mapbox-gl";
 import states from "../states.geojson";
-import population from "../population.json";
 
-function Map({ color_scale }) {
+import Legend from "./Legend";
+
+function Map({ color_scales, data, default_active_data }) {
+  console.log("MAP");
+  const [layer_state, setLayerState] = useState({
+    active_data: default_active_data,
+    color_scale: color_scales[default_active_data],
+  });
   mapboxgl.accessToken =
     "pk.eyJ1Ijoicml3YWpwIiwiYSI6ImNreGhqdmNrcTJheXUyeHRoZGV4Mm9qZTAifQ.krIdQfzikO4kh6g3j6ClLg";
   const map_container = useRef(null);
@@ -13,6 +19,7 @@ function Map({ color_scale }) {
   const [lat, setLat] = useState(42.35);
   const [zoom, setZoom] = useState(9);
 
+  const data_keys = Object.keys(data);
   //render the map
   useEffect(() => {
     if (map.current) return;
@@ -26,6 +33,7 @@ function Map({ color_scale }) {
     map.current.on("load", () => {
       //add sources and layers
       map.current.addSource("states", { type: "geojson", data: states });
+
       map.current.addLayer({
         id: "states_layer",
         type: "fill",
@@ -34,8 +42,9 @@ function Map({ color_scale }) {
           "fill-color": [
             "interpolate",
             ["linear"],
-            ["coalesce", ["feature-state", "population"], 0], //if population in feature-state is not set yet, use 0
-            ...color_scale,
+
+            ["coalesce", ["feature-state", default_active_data], 0],
+            ...color_scales[default_active_data],
           ],
 
           "fill-opacity": 0.4,
@@ -49,12 +58,10 @@ function Map({ color_scale }) {
         paint: { "line-color": "black", "line-width": 2 },
       });
     });
-
-    const population_added_states = []; //states with updated population feature-state
-
     map.current.on("render", () => {
-      if (population_added_states.length < population.length) {
-        //if states without population feature-state exist
+      const states_layer = map.current.getLayer("states_layer");
+
+      if (states_layer) {
         const states_layer = map.current.getLayer("states_layer");
 
         if (states_layer) {
@@ -63,29 +70,55 @@ function Map({ color_scale }) {
           });
 
           for (let feature of features) {
-            if (!population_added_states.includes(feature.properties.name)) {
-              //if population  feature-state is not already set
-              map.current.setFeatureState(
-                { source: "states", id: feature.id },
-                {
-                  population: parseInt(
-                    population
-                      .filter((p) =>
-                        p.State.endsWith(feature.properties.name)
-                      )[0]
-                      ["2,022"].replace(/,/g, "")
-                  ),
-                }
-              );
-              population_added_states.push(feature.properties.name);
+            let feature_data_state = {};
+            for (let i of data_keys) {
+              feature_data_state[i] = data[i][feature.properties.name];
             }
+            map.current.setFeatureState(
+              { source: "states", id: feature.id },
+              {
+                ...feature_data_state,
+                ...layer_state,
+              }
+            );
           }
         }
       }
     });
   });
 
-  return <div ref={map_container} className="map-container"></div>;
+  return (
+    <div>
+      <Legend layer_state={layer_state} />
+      <div ref={map_container} className="map-container"></div>
+
+      <button
+        onClick={() => {
+          const temp_new_state =
+            layer_state.active_data == data_keys[0]
+              ? {
+                  active_data: data_keys[1],
+                  color_scale: color_scales[data_keys[1]],
+                }
+              : {
+                  active_data: data_keys[0],
+                  color_scale: color_scales[data_keys[0]],
+                };
+          setLayerState(temp_new_state);
+
+          map.current.setPaintProperty("states_layer", "fill-color", [
+            "interpolate",
+            ["linear"],
+
+            ["coalesce", ["feature-state", temp_new_state.active_data], 0],
+            ...temp_new_state.color_scale,
+          ]);
+        }}
+      >
+        Toggle
+      </button>
+    </div>
+  );
 }
 
 export default Map;
