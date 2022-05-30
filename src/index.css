@@ -17,7 +17,11 @@
 }
 
 
-.legend__color{
+.legend__item{
+  cursor: pointer;
+  margin-top:5px;
+}
+.legend__item__color{
   width:10px;
   height:10px;
   border:0 solid;

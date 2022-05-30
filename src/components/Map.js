@@ -7,6 +7,7 @@ function Map({ color_scales, data, default_active_data, center, zoom }) {
   const [layer_state, setLayerState] = useState({
     active_data: default_active_data,
     color_scale: color_scales[default_active_data],
+    hovered_range: null,
   });
   const [features, setFeatures] = useState([]);
 
@@ -72,9 +73,9 @@ function Map({ color_scales, data, default_active_data, center, zoom }) {
   });
 
   useEffect(() => {
-    for (let feature of features) {
-      let feature_state = {};
-      for (let i of data_keys) {
+    for (const feature of features) {
+      const feature_state = {};
+      for (const i of data_keys) {
         feature_state[i] = data[i][feature.properties.name];
       }
       map.current.setFeatureState(
@@ -91,18 +92,67 @@ function Map({ color_scales, data, default_active_data, center, zoom }) {
     if (states_layer) {
       //if states_layer rendered====================
       map.current.setPaintProperty("states_layer", "fill-color", [
-        "interpolate",
-        ["linear"],
+        "case",
+        ["boolean", ["feature-state", "highlight"], false],
+        "blue",
+        [
+          "interpolate",
+          ["linear"],
 
-        ["coalesce", ["feature-state", layer_state.active_data], 0],
-        ...layer_state.color_scale,
+          ["coalesce", ["feature-state", layer_state.active_data], 0],
+          ...layer_state.color_scale,
+        ],
       ]);
+
+      if (layer_state.hovered_range) {
+        for (const f of features) {
+          let highlight;
+          if (layer_state.hovered_range.length == 2) {
+            if (
+              data[layer_state.active_data][f.properties.name] >=
+                layer_state.hovered_range[0] &&
+              data[layer_state.active_data][f.properties.name] <=
+                layer_state.hovered_range[1]
+            ) {
+              highlight = true;
+            } else {
+              highlight = false;
+            }
+
+            map.current.setFeatureState(
+              { source: "states", id: f.id },
+              { highlight: highlight }
+            );
+          } else {
+            if (
+              data[layer_state.active_data][f.properties.name] >=
+              layer_state.hovered_range[0]
+            ) {
+              highlight = true;
+            } else {
+              highlight = false;
+            }
+
+            map.current.setFeatureState(
+              { source: "states", id: f.id },
+              { highlight: highlight }
+            );
+          }
+        }
+      } else {
+        for (const f of features) {
+          map.current.setFeatureState(
+            { source: "states", id: f.id },
+            { highlight: false }
+          );
+        }
+      }
     }
   }, [layer_state]);
 
   return (
     <div>
-      <Legend layer_state={layer_state} />
+      <Legend layer_state={layer_state} setLayerState={setLayerState} />
 
       <div ref={map_container} className="map-container"></div>
 
