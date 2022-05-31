@@ -2,15 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import states from "../states.geojson";
 import Legend from "./Legend";
+import { featureHighlight, paintProperty } from "./utils";
 
 function Map({ color_scales, data, default_active_data, center, zoom }) {
   const [layer_state, setLayerState] = useState({
     active_data: default_active_data,
     color_scale: color_scales[default_active_data],
-    hovered_range: null,
   });
-  const [features, setFeatures] = useState([]);
 
+  const [hovered_range, setHoveredRange] = useState(null);
+  const [features, setFeatures] = useState([]);
   //map initialization====================
   mapboxgl.accessToken =
     "pk.eyJ1Ijoicml3YWpwIiwiYSI6ImNreGhqdmNrcTJheXUyeHRoZGV4Mm9qZTAifQ.krIdQfzikO4kh6g3j6ClLg";
@@ -38,13 +39,10 @@ function Map({ color_scales, data, default_active_data, center, zoom }) {
         type: "fill",
         source: "states",
         paint: {
-          "fill-color": [
-            "interpolate",
-            ["linear"],
-
-            ["coalesce", ["feature-state", default_active_data], 0],
-            ...color_scales[default_active_data],
-          ],
+          "fill-color": paintProperty(
+            default_active_data,
+            color_scales[default_active_data]
+          ),
 
           "fill-opacity": 0.4,
         },
@@ -91,83 +89,39 @@ function Map({ color_scales, data, default_active_data, center, zoom }) {
     const states_layer = map.current.getLayer("states_layer");
     if (states_layer) {
       //if states_layer rendered====================
-      map.current.setPaintProperty("states_layer", "fill-color", [
-        "case",
-        ["boolean", ["feature-state", "highlight"], false],
-        "blue",
-        [
-          "interpolate",
-          ["linear"],
-
-          ["coalesce", ["feature-state", layer_state.active_data], 0],
-          ...layer_state.color_scale,
-        ],
-      ]);
-
-      if (layer_state.hovered_range) {
-        for (const f of features) {
-          let highlight;
-          if (layer_state.hovered_range.length == 2) {
-            if (
-              data[layer_state.active_data][f.properties.name] >=
-                layer_state.hovered_range[0] &&
-              data[layer_state.active_data][f.properties.name] <=
-                layer_state.hovered_range[1]
-            ) {
-              highlight = true;
-            } else {
-              highlight = false;
-            }
-
-            map.current.setFeatureState(
-              { source: "states", id: f.id },
-              { highlight: highlight }
-            );
-          } else {
-            if (
-              data[layer_state.active_data][f.properties.name] >=
-              layer_state.hovered_range[0]
-            ) {
-              highlight = true;
-            } else {
-              highlight = false;
-            }
-
-            map.current.setFeatureState(
-              { source: "states", id: f.id },
-              { highlight: highlight }
-            );
-          }
-        }
-      } else {
-        for (const f of features) {
-          map.current.setFeatureState(
-            { source: "states", id: f.id },
-            { highlight: false }
-          );
-        }
-      }
+      map.current.setPaintProperty(
+        "states_layer",
+        "fill-color",
+        paintProperty(layer_state.active_data, layer_state.color_scale)
+      );
     }
   }, [layer_state]);
 
+  useEffect(() => {
+    for (const f of features) {
+      map.current.setFeatureState(
+        { source: "states", id: f.id },
+        { highlight: featureHighlight(f, data, layer_state, hovered_range) }
+      );
+    }
+  }, [hovered_range]);
+
+  const handleClick = (data_key) => {
+    const temp_new_state = {
+      active_data: data_key,
+      color_scale: color_scales[data_key],
+    };
+
+    setLayerState(temp_new_state);
+  };
   return (
     <div>
-      <Legend layer_state={layer_state} setLayerState={setLayerState} />
+      <Legend layer_state={layer_state} setHoveredRange={setHoveredRange} />
 
       <div ref={map_container} className="map-container"></div>
 
       {data_keys.map((k) => (
-        <button
-          key={k}
-          onClick={() => {
-            const temp_new_state = {
-              active_data: k,
-              color_scale: color_scales[k],
-            };
-
-            setLayerState(temp_new_state);
-          }}
-        >
+        <button key={k} onClick={() => handleClick(k)}>
           {k}
         </button>
       ))}

@@ -1,6 +1,13 @@
 import React from "react";
 
-function Legend({ layer_state, setLayerState }) {
+const Legend = ({ layer_state, setHoveredRange }) => {
+  const handleMouseOver = (element, index) => {
+    const range =
+      index == layer_state.color_scale.length - 2
+        ? [element]
+        : [element, layer_state.color_scale[index + 2]];
+    setHoveredRange(range);
+  };
   return (
     <div>
       {" "}
@@ -13,16 +20,8 @@ function Legend({ layer_state, setLayerState }) {
                 <div
                   key={s}
                   className="legend__item"
-                  onMouseOver={() => {
-                    const range =
-                      i == layer_state.color_scale.length - 2
-                        ? [s]
-                        : [s, layer_state.color_scale[i + 2]];
-                    setLayerState({ ...layer_state, hovered_range: range });
-                  }}
-                  onMouseOut={() =>
-                    setLayerState({ ...layer_state, hovered_range: null })
-                  }
+                  onMouseOver={() => handleMouseOver(s, i)}
+                  onMouseOut={() => setHoveredRange(null)}
                 >
                   <div
                     style={{
@@ -42,6 +41,6 @@ function Legend({ layer_state, setLayerState }) {
       </div>
     </div>
   );
-}
+};
 
 export default Legend;

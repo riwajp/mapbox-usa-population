@@ -74,7 +74,7 @@ function App() {
       <Map
         color_scales={color_scales}
         data={data}
-        default_active_data="literacy"
+        default_active_data="population2022"
         center={[-107.484229, 43.644026]}
         zoom={3}
       />
